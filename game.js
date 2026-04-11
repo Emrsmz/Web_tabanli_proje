@@ -35,14 +35,6 @@ function newOrder() {
   const randomIndex = Math.floor(Math.random() * DRINKS.length);
   state.order = DRINKS[randomIndex];
   state.selected = [];
-
-  // Siparişin resmini çiz
-  const img = drinkImages[state.order.id];
-  if (img.complete) {
-    ctx.drawImage(img, 10, 10, 150, 150);
-  } else {
-    img.onload = () => ctx.drawImage(img, 10, 10, 150, 150);
-  }
 }
 
 function selectIngredient(id) {}
