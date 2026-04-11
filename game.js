@@ -6,10 +6,10 @@ const ctx = canvas.getContext("2d");
 const INGREDIENTS = [
   { id: "alcohol",   label: "Alkol",    emoji: "" },
   { id: "lime",      label: "Limon",    emoji: "" },
-  { id: "orange",    label: "", emoji: "" },
-  { id: "mint",      label: "",     emoji: "" },
-  { id: "soda",      label: "",     emoji: "" },
-  { id: "sugar",     label: "",    emoji: "" },
+  { id: "orange",    label: "Portakal", emoji: "" },
+  { id: "mint",      label: "Nane",     emoji: "" },
+  { id: "soda",      label: "Soda",     emoji: "" },
+  { id: "sugar",     label: "Şeker",    emoji: "" },
 ];
 
 const DRINKS = [
@@ -30,9 +30,14 @@ const state = {
 
 // OYUN FONKSİYONLARI
 
-function startGame() {}
-
-function newOrder() {}
+function startGame() {
+  state.screen = "game";
+  state.score = 0;
+  newOrder();
+}
+function newOrder() {
+  
+}
 
 function selectIngredient(id) {}
 
@@ -44,11 +49,42 @@ function endGame() {}
 
 // ÇİZİM FONKSİYONLARI
 
-function draw() {}
+function draw() {
+  if(state.screen === "menu"){
+    drawMenu();
+  }
+  else if (state.screen === "game"){
+    drawGame();
+  }
+}
+//Başlangıç Ekranı yani
+function drawMenu(){
+  ctx.fillStyle = "orange";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-function drawMenu() {}
+  //Başlık
+  ctx.fillStyle = "red";
+  ctx.font = "40px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Mixer",canvas.width/2 ,200); 
 
-function drawGame() {}
+  //Buton
+  ctx.fillStyle = "#ff6347";
+  ctx.fillRect(canvas.width/2-80,300,160,60);
+  ctx.fillStyle = "white";
+  ctx.font = "24px Arial";
+  ctx.fillText("Oyna", canvas.width / 2, 333);
+}
+
+function drawGame() {
+  ctx.fillStyle = "violet"
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  drawOrder();
+  drawIngredients();
+  drawSelected();
+  drawTimer();
+  drawScore();
+}
 
 function drawOrder() {}
 
