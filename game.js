@@ -1,6 +1,7 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+
 // VERİ
 
 const INGREDIENTS = [
@@ -12,15 +13,10 @@ const INGREDIENTS = [
   { id: "sugar",     label: "Şeker",    emoji: "" },
 ];
 
-const DRINKS = [
-  { id: "margarita", label: "Margarita", ingredients: ["alcohol", "lime", "orange"] },
-  { id: "mojito",    label: "Mojito",    ingredients: ["alcohol", "lime", "mint", "soda", "sugar"] },
-];
-
 // OYUN DURUMU
 
 const state = {
-  screen: "menu",        // "menu" | "game" | "end"
+  screen: "game",        // "menu" | "game" | "end"
   order: null,           // Aktif sipariş  { id, label, ingredients }
   selected: [],          // Seçilen malzemeler  ["alcohol", "lime", ...]
   score: 0,
@@ -36,7 +32,17 @@ function startGame() {
   newOrder();
 }
 function newOrder() {
-  
+  const randomIndex = Math.floor(Math.random() * DRINKS.length);
+  state.order = DRINKS[randomIndex];
+  state.selected = [];
+
+  // Siparişin resmini çiz
+  const img = drinkImages[state.order.id];
+  if (img.complete) {
+    ctx.drawImage(img, 10, 10, 150, 150);
+  } else {
+    img.onload = () => ctx.drawImage(img, 10, 10, 150, 150);
+  }
 }
 
 function selectIngredient(id) {}
@@ -79,6 +85,18 @@ function drawMenu(){
 function drawGame() {
   ctx.fillStyle = "violet"
   ctx.fillRect(0,0,canvas.width,canvas.height);
+  //Ayrık Çizgi 1
+  ctx.beginPath();
+  ctx.moveTo(740,0);
+  ctx.lineTo(740,800);
+  ctx.stroke();
+  //Çizgi 2
+  ctx.beginPath();
+  ctx.moveTo(560,0);
+  ctx.lineTo(560,800);
+  ctx.stroke();
+
+
   drawOrder();
   drawIngredients();
   drawSelected();
@@ -86,8 +104,10 @@ function drawGame() {
   drawScore();
 }
 
-function drawOrder() {}
+function drawOrder() {
 
+}
+    
 function drawIngredients() {}
 
 function drawSelected() {}
