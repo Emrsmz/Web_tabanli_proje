@@ -3,7 +3,6 @@ const ctx = canvas.getContext("2d");
 
 
 // VERİ
-
 const INGREDIENTS = [
   { id: "alcohol",   label: "Alkol",    emoji: "" },
   { id: "lime",      label: "Limon",    emoji: "" },
@@ -35,6 +34,7 @@ function newOrder() {
   const randomIndex = Math.floor(Math.random() * DRINKS.length);
   state.order = DRINKS[randomIndex];
   state.selected = [];
+  state.timeLeft = 30;
 }
 
 function selectIngredient(id) {}
@@ -97,6 +97,10 @@ function drawGame() {
 }
 
 function drawOrder() {
+  ctx.fillStyle = "White";
+  ctx.font = "bold 24px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Sipariş: "+ state.order.label, canvas.width/2,50);
 
 }
     
