@@ -1,0 +1,138 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayan Malzeme</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2d2d2;
+        }
+
+        canvas {
+            background-color: #e0d5d5;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    
+    <canvas id="canvasAnimasyon" width="900" height="800"></canvas>
+
+    <script>
+        const canvas = document.getElementById("canvasAnimasyon");
+        const ctx = canvas.getContext("2d");
+
+        const hız = 1.5;
+        const malzemeBoyutu = 70;
+        const boşluk = 100;
+        const sütunSayısı = 5;
+        const sütunGenişliği = canvas.width / sütunSayısı;
+
+        const sekiller = ["kare", "daire", "üçgen", "beşgen", "altıgen"]; //Burası pixelart belirlendiğinde güncellenecek
+        const renkler = ["#C227F5", "#27F52E", "#F527CF", "#f1c40f", "#9b59b6", "#e67e22", "#34495e"];
+
+        let malzemeler = [];
+
+        const malzemeSayısı = Math.ceil(canvas.height / boşluk) + 1;
+
+        for(let sütun = 0; sütun < sütunSayısı; sütun++) {
+            for(let i = 0; i < malzemeSayısı; i++) {
+                malzemeler.push({
+                    sütun: sütun,
+                    x: (sütun * sütunGenişliği) + (sütunGenişliği / 2),
+                    y: i * boşluk - boşluk,
+                    tür: rastgele(sekiller),
+                    renk: rastgele(renkler)
+                });
+            }
+        }
+
+        function rastgele(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function sekliCiz(malzeme) {
+            ctx.fillStyle = malzeme.renk;
+            ctx.beginPath();
+
+            if(malzeme.tür === "kare") {
+                ctx.rect(malzeme.x - malzemeBoyutu/2, malzeme.y - malzemeBoyutu/2, malzemeBoyutu, malzemeBoyutu);
+            }
+            else if(malzeme.tür === "daire") {
+                ctx.arc(malzeme.x, malzeme.y, malzemeBoyutu/2, 0, Math.PI * 2);
+            }
+            else if(malzeme.tür === "üçgen") {
+                ctx.moveTo(malzeme.x, malzeme.y - malzemeBoyutu/2);
+                ctx.lineTo(malzeme.x + malzemeBoyutu/2, malzeme.y + malzemeBoyutu/2);
+                ctx.lineTo(malzeme.x - malzemeBoyutu/2, malzeme.y + malzemeBoyutu/2);
+            }
+            else if(malzeme.tür === "beşgen") {
+                const yaricap = malzemeBoyutu / 2;
+                for (let i = 0; i < 5; i++) {
+                    let aci = (i * 2 * Math.PI / 5) - (Math.PI / 2); 
+                    let x = malzeme.x + yaricap * Math.cos(aci);
+                    let y = malzeme.y + yaricap * Math.sin(aci);
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+            }
+            else if(malzeme.tür === "altıgen") {
+                const yaricap = malzemeBoyutu / 2;
+                // Altıgenin sivri ucunun yukarı bakması için -PI/2 açısından başlatıyoruz
+                for (let i = 0; i < 6; i++) {
+                    let aci = (i * 2 * Math.PI / 6) - (Math.PI / 2);
+                    let x = malzeme.x + yaricap * Math.cos(aci);
+                    let y = malzeme.y + yaricap * Math.sin(aci);
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+            }  
+
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function animasyon() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for(let i = 0; i < malzemeler.length; i++) {
+                let malzeme = malzemeler[i];
+
+                malzeme.y += hız;
+
+                if(malzeme.y > canvas.height + boşluk) {
+                    let sütunMalzemeleri = malzemeler.filter(m => m.sütun === malzeme.sütun);
+                    let enÜsttekiY = Math.min(...sütunMalzemeleri.map(m => m.y));
+
+                    malzeme.y = enÜsttekiY - boşluk;
+
+                    malzeme.tür = rastgele(sekiller);
+                    malzeme.renk = rastgele(renkler);
+                }
+
+                sekliCiz(malzeme);
+            }
+
+            requestAnimationFrame(animasyon);
+        }
+
+        animasyon();
+
+
+    </script>
+
+</body>
+</html>
