@@ -88,7 +88,6 @@
             }
             else if(malzeme.tür === "altıgen") {
                 const yaricap = malzemeBoyutu / 2;
-                // Altıgenin sivri ucunun yukarı bakması için -PI/2 açısından başlatıyoruz
                 for (let i = 0; i < 6; i++) {
                     let aci = (i * 2 * Math.PI / 6) - (Math.PI / 2);
                     let x = malzeme.x + yaricap * Math.cos(aci);
