@@ -1,6 +1,14 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+const kova = new Image();
+kova.src = "kova.png"
+
+const speed = 1.5;
+const ingredientSize = 70;
+const space = 100;
+const columnCount = 5;
+const columnWidth = canvas.width / columnCount;
 
 // VERİ
 const INGREDIENTS = [
@@ -11,6 +19,21 @@ const INGREDIENTS = [
   { id: "soda",      label: "Soda",     emoji: "" },
   { id: "sugar",     label: "Şeker",    emoji: "" },
 ];
+
+for(let column = 0; column < columnCount; column++){
+    for(let i = 0; i < columnCount; i++){
+        INGREDIENTS.push({
+            column: column,
+            x: (column * columnWidth) + (columnWidth / 2),
+            y: i * space - space,
+            type: random(INGREDIENTS),
+        });
+    }
+}
+
+function random(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+}
 
 // OYUN DURUMU
 
@@ -104,7 +127,40 @@ function drawOrder() {
 
 }
     
-function drawIngredients() {}
+function drawIngredients() {
+    ctx.beginPath();
+
+    if(INGREDIENTS.type === "alcohol"){
+        ctx.drawImage(kova, INGREDIENTS.x - ingredientSize/2, INGREDIENTS.y - ingredientSize/2, ingredientSize, ingredientSize)
+    }
+
+    ctx.closePath();
+}
+
+function animation() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for(let i = 0; i< INGREDIENTS.length; i++){
+        let ingredient = INGREDIENTS[i];
+
+        ingredient.y += speed;
+
+        if(ingredient.y > canvas.height + space){
+            let columnIngredients = ingredient.filter(m => m.column === ingredient.column);
+            let UpperY = Math.min(...columnIngredients.map(m => m.y));
+
+            ingredient.y = UpperY - space;
+            ingredient.type = random(INGREDIENTS);
+        }
+        drawIngredients
+    }
+
+    requestAnimationFrame(animation);
+}
+
+kova.onload = () => {
+    animation();
+};
 
 function drawSelected() {}
 
