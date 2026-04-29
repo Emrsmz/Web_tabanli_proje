@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Layout</title>
+    <link rel="stylesheet" href="recipeBook.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div id="recipeBook" class="hidden">
+                <h3>Recipe Book</h3>
+                <ul>
+                <li>Recipe 1</li>
+                <li>Recipe 2</li>
+                </ul>
+            </div>
+            <div id="controls">
+                <button id="mixBtn">MIX</button>
+                <button onclick="toggleBook()">Recipe Book</button>
+            </div>
+</div>
+<script src="mixing.js"></script>
+</body>
+</html>
