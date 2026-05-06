@@ -1,6 +1,6 @@
 // Düşman tankı
 class EnemyTank {
-    constructor(x, y, level = 1) {
+    constructor(x, y, level = 1, phaseOffset = 0) {
         this.x = x;
         this.y = y;
         this.radius = 20;
@@ -15,7 +15,8 @@ class EnemyTank {
         this.shootCooldown = 2500;
         this.color = '#ff6b6b';
         this.targetAngle = 0;
-        this.moveTimer = 0;
+        // Her düşmana farklı başlangıç fazı ver, üst üste binmeyi önle
+        this.moveTimer = phaseOffset;
     }
     
     update() {
@@ -57,6 +58,7 @@ class EnemyTank {
                 );
                 this.bullets.push(bullet);
                 this.lastShot = now;
+                soundManager.playEnemyShoot();
             }
         }
         
