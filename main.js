@@ -41,7 +41,9 @@ function spawnEnemies() {
             y = Math.random() * (canvas.height - 100) + 50;
         } while (Math.hypot(x - player.x, y - player.y) < 200);
         
-        enemies.push(new EnemyTank(x, y, level));
+        // Her düşmana farklı faz ofseti ver (daire üzerinde eşit dağılım)
+        const phaseOffset = (i / enemyCount) * (2 * Math.PI / 0.005) * (1 / (0.7 + (level - 1) * 0.1));
+        enemies.push(new EnemyTank(x, y, level, phaseOffset));
     }
 }
 
@@ -86,6 +88,7 @@ function gameLoop() {
         level++;
         spawnEnemies();
         updateUI();
+        soundManager.playLevelUp();
     }
     
     // UI çiz
@@ -226,6 +229,8 @@ function updateUI() {
 function gameOver() {
     gameRunning = false;
     gameOverVisible = true;
+    soundManager.stopMusic();
+    soundManager.playGameOver();
 }
 
 // Yeniden başla
@@ -233,10 +238,20 @@ function restartGame() {
     gameOverVisible = false;
     init();
     gameLoop();
+    soundManager.restartMusic();
+}
+
+// Ses başlatma - ilk etkileşimde
+function initAudio() {
+    if (!soundManager.initialized) {
+        soundManager.init();
+        soundManager.startMusic();
+    }
 }
 
 // Event listeners
 document.addEventListener('keydown', (e) => {
+    initAudio();
     keys[e.key] = true;
 });
 
@@ -251,6 +266,7 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 canvas.addEventListener('mousedown', (e) => {
+    initAudio();
     const rect = canvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
@@ -280,6 +296,17 @@ canvas.addEventListener('mouseleave', (e) => {
         player.isShooting = false;
     }
 });
+
+// Ses kontrol butonu
+const muteBtn = document.getElementById('muteBtn');
+if (muteBtn) {
+    muteBtn.addEventListener('click', () => {
+        initAudio();
+        const muted = soundManager.toggleMute();
+        muteBtn.textContent = muted ? '🔇' : '🔊';
+        muteBtn.style.borderColor = muted ? '#ff6b6b' : '#4CAF50';
+    });
+}
 
 // Oyunu başlat
 init();
