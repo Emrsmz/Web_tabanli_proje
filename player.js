@@ -60,6 +60,7 @@ class PlayerTank {
             );
             this.bullets.push(bullet);
             this.lastShot = now;
+            soundManager.playShoot();
         }
     }
     
@@ -96,6 +97,7 @@ class PlayerTank {
     
     takeDamage(damage) {
         this.health -= damage;
+        soundManager.playPlayerHit();
         if (this.health <= 0) {
             this.health = 0;
             gameOver();
