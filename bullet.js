@@ -27,6 +27,9 @@ class Bullet {
                 if (dist < enemy.radius + this.radius) {
                     if (enemy.takeDamage(this.damage)) {
                         enemies.splice(index, 1);
+                        soundManager.playExplosion();
+                    } else {
+                        soundManager.playHit();
                     }
                     this.active = false;
                 }
