@@ -8,7 +8,13 @@ class Bullet {
         this.radius = 8;
         this.owner = owner;
         this.active = true;
-        this.damage = 5;
+        
+        // Oyuncunun güç seviyesine göre hasar
+        if (owner instanceof PlayerTank) {
+            this.damage = owner.bulletDamage;
+        } else {
+            this.damage = 5;
+        }
     }
     
     update() {
@@ -27,6 +33,7 @@ class Bullet {
                 if (dist < enemy.radius + this.radius) {
                     if (enemy.takeDamage(this.damage)) {
                         enemies.splice(index, 1);
+                        score += 10; // Skor eklendi
                         soundManager.playExplosion();
                     } else {
                         soundManager.playHit();

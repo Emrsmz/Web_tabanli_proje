@@ -1,4 +1,4 @@
-// Oyuncu tankı
+// Oyuncu karakteri
 class PlayerTank {
     constructor(x, y) {
         this.x = x;
@@ -13,6 +13,11 @@ class PlayerTank {
         this.shootCooldown = 500;
         this.color = '#4CAF50';
         this.isShooting = false;
+        
+        // Meltdown mekanikleri - hasar aldıkça güçlenme
+        this.totalDamageTaken = 0;
+        this.powerLevel = 1;
+        this.bulletDamage = 5;
     }
     
     update() {
@@ -91,17 +96,53 @@ class PlayerTank {
             ctx.fillRect(this.x - 30, this.y - this.radius - 15, 60 * (this.health / this.maxHealth), 8);
         }
         
+        // Güç seviyesi göstergesi
+        if (this.powerLevel > 1) {
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Lv.${this.powerLevel}`, this.x, this.y + this.radius + 25);
+        }
+        
         // Mermileri çiz
         this.bullets.forEach(bullet => bullet.draw());
     }
     
     takeDamage(damage) {
         this.health -= damage;
+        this.totalDamageTaken += damage;
+        
+        // Meltdown mekanikleri - hasar aldıkça güçlen
+        this.updatePowerLevel();
+        
         soundManager.playPlayerHit();
         if (this.health <= 0) {
             this.health = 0;
             gameOver();
         }
         updateUI();
+    }
+    
+    // Güç seviyesini hasara göre güncelle
+    updatePowerLevel() {
+        const oldLevel = this.powerLevel;
+        
+        // Her 20 hasarda bir güç seviyesi artar
+        this.powerLevel = Math.floor(this.totalDamageTaken / 20) + 1;
+        
+        if (this.powerLevel > oldLevel) {
+            // Güçlendikçe hasar artar
+            this.bulletDamage = 5 + (this.powerLevel - 1) * 3;
+            
+            // Renk değişimi
+            const colors = ['#4CAF50', '#2196F3', '#FF9800', '#F44336'];
+            this.color = colors[Math.min(this.powerLevel - 1, colors.length - 1)];
+            
+            // Güçlenme sesi
+            soundManager.playPowerUp();
+            
+            // Debug mesajı
+            console.log(`Güç seviyesi ${this.powerLevel} oldu! Hasar: ${this.bulletDamage}`);
+        }
     }
 }

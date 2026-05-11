@@ -4,6 +4,7 @@ const ctx = canvas.getContext('2d');
 // Oyun durumu
 let gameRunning = true;
 let level = 1;
+let score = 0; // Skor sistemi eklendi
 let mouseX = canvas.width / 2;
 let mouseY = canvas.height / 2;
 
@@ -34,6 +35,8 @@ function init() {
 // Düşmanları spawnla
 function spawnEnemies() {
     const enemyCount = Math.min(level, 5); // Maksimum 5 düşman, seviye başına 1 düşman
+    console.log(`Seviye ${level} için ${enemyCount} düşman spawnlanıyor...`);
+    
     for (let i = 0; i < enemyCount; i++) {
         let x, y;
         do {
@@ -43,7 +46,9 @@ function spawnEnemies() {
         
         // Her düşmana farklı faz ofseti ver (daire üzerinde eşit dağılım)
         const phaseOffset = (i / enemyCount) * (2 * Math.PI / 0.005) * (1 / (0.7 + (level - 1) * 0.1));
-        enemies.push(new EnemyTank(x, y, level, phaseOffset));
+        const enemy = new EnemyTank(x, y, level, phaseOffset);
+        enemies.push(enemy);
+        console.log(`Düşman spawnlandı: x=${x.toFixed(0)}, y=${y.toFixed(0)}, level=${level}`);
     }
 }
 
@@ -86,6 +91,8 @@ function gameLoop() {
     // Seviye kontrolü
     if (enemies.length === 0) {
         level++;
+        score += 100 * level; // Seviye bonusu
+        console.log(`Seviye ${level} başlıyor! Bonus: ${100 * level}`);
         spawnEnemies();
         updateUI();
         soundManager.playLevelUp();
@@ -111,12 +118,12 @@ function drawUIOverlay() {
     
     // Yarı saydam arka plan
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(10, 10, 200, 80);
+    ctx.fillRect(10, 10, 200, 100);
     
     // Kenarlık
     ctx.strokeStyle = '#4CAF50';
     ctx.lineWidth = 2;
-    ctx.strokeRect(10, 10, 200, 80);
+    ctx.strokeRect(10, 10, 200, 100);
     
     // Metinler
     ctx.fillStyle = '#FFFFFF';
@@ -126,12 +133,15 @@ function drawUIOverlay() {
     // Seviye
     ctx.fillText(`Seviye: ${level}`, 20, 35);
     
+    // Skor
+    ctx.fillText(`Skor: ${score}`, 20, 60);
+    
     // Can barı
-    ctx.fillText('Can:', 20, 65);
+    ctx.fillText('Can:', 20, 85);
     
     // Can barı arka plan
     ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
-    ctx.fillRect(70, 52, 120, 20);
+    ctx.fillRect(70, 72, 120, 20);
     
     // Can barı dolgu
     const health = player ? player.health : 0;
@@ -140,18 +150,18 @@ function drawUIOverlay() {
                       healthPercent > 0.25 ? '#FFA500' : '#FF6B6B';
     
     ctx.fillStyle = healthColor;
-    ctx.fillRect(70, 52, 120 * healthPercent, 20);
+    ctx.fillRect(70, 72, 120 * healthPercent, 20);
     
     // Can barı kenarlık
     ctx.strokeStyle = '#FFFFFF';
     ctx.lineWidth = 1;
-    ctx.strokeRect(70, 52, 120, 20);
+    ctx.strokeRect(70, 72, 120, 20);
     
     // Can metni
     ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 14px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText(`${Math.max(0, health)}/50`, 130, 66);
+    ctx.fillText(`${Math.max(0, health)}/50`, 130, 86);
     
     ctx.restore();
 }
@@ -165,7 +175,7 @@ function drawGameOver() {
     
     // Game over paneli
     const panelWidth = 400;
-    const panelHeight = 250;
+    const panelHeight = 280;
     const panelX = (canvas.width - panelWidth) / 2;
     const panelY = (canvas.height - panelHeight) / 2;
     
@@ -182,13 +192,18 @@ function drawGameOver() {
     ctx.fillStyle = '#FF6B6B';
     ctx.font = 'bold 36px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('OYUN BİTTİ!', canvas.width / 2, panelY + 60);
+    ctx.fillText('OYUN BİTTİ!', canvas.width / 2, panelY + 50);
+    
+    // Final skor
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 24px Arial';
+    ctx.fillText(`Final Skor: ${score}`, canvas.width / 2, panelY + 100);
     
     // Yeniden başla butonu
     const buttonWidth = 200;
     const buttonHeight = 50;
     const buttonX = (canvas.width - buttonWidth) / 2;
-    const buttonY = panelY + 160;
+    const buttonY = panelY + 180;
     
     // Buton arka plan (animasyonlu)
     const pulse = Math.sin(animationTimer * 0.05) * 0.1 + 0.9;
@@ -233,9 +248,12 @@ function gameOver() {
     soundManager.playGameOver();
 }
 
+
 // Yeniden başla
 function restartGame() {
     gameOverVisible = false;
+    level = 1; // Seviyeyi sıfırla
+    console.log("Oyun yeniden başlıyor - Seviye 1");
     init();
     gameLoop();
     soundManager.restartMusic();

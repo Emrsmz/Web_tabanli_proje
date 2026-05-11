@@ -216,6 +216,61 @@ class SoundManager {
         osc.stop(now + 0.35);
     }
 
+    // Güçlenme sesi - yükselen enerji efekti
+    playPowerUp() {
+        if (!this.initialized || this.muted) return;
+        const ctx = this.audioCtx;
+        const now = ctx.currentTime;
+
+        // Yükselen arpej
+        const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5
+        const duration = 0.08;
+
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+
+            const startTime = now + i * duration;
+            gain.gain.setValueAtTime(0, startTime);
+            gain.gain.linearRampToValueAtTime(this.sfxVolume * 0.4, startTime + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+            osc.connect(gain);
+            gain.connect(this.masterGainNode);
+
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+        });
+
+        // Parıltı efekti
+        const bufferSize = ctx.sampleRate * 0.3;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3) * 0.1;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(this.sfxVolume * 0.1, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'highpass';
+        filter.frequency.value = 3000;
+
+        noise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(this.masterGainNode);
+
+        noise.start(now);
+    }
+
     // Seviye atlama sesi - yükselen melodili fanfar
     playLevelUp() {
         if (!this.initialized || this.muted) return;

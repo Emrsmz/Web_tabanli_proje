@@ -69,6 +69,7 @@ class EnemyTank {
         });
     }
     
+        
     draw() {
         // Tank gövdesi
         ctx.save();
