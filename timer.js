@@ -1,4 +1,4 @@
-// Süre sayacı
+// süre sayaç 
 class GameTimer {
     constructor(duration) {
         this.duration = duration;
@@ -8,7 +8,7 @@ class GameTimer {
     }
 
     update() {
-        // oyun durdurulduysa zaman geçmesin
+        // oyun duruyosa sürede dursun 
         if (this.isPaused || !gameRunning) {
             this.lastTime = Date.now();
             return;
@@ -20,7 +20,7 @@ class GameTimer {
 
         this.timeRemaining -= deltaTime;
 
-        // süre bittiğinde
+        
         if (this.timeRemaining <= 0) {
             this.timeRemaining = 0;
             gameOver();
@@ -30,7 +30,7 @@ class GameTimer {
     draw() {
         ctx.save();
 
-        // sayaç arka planı
+        // sayacin arka plani
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.fillRect(canvas.width / 2 - 60, 10, 120, 40);
 
@@ -54,7 +54,7 @@ class GameTimer {
         ctx.textAlign = 'center';
         ctx.fillText(timeStr, canvas.width / 2, 38);
 
-        // oyunu durdurma ekranı
+        // oyun durduğundaki ekran
         if (this.isPaused && gameRunning) {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
