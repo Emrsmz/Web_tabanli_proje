@@ -38,14 +38,12 @@ class GameTimer {
         ctx.lineWidth = 2;
         ctx.strokeRect(canvas.width / 2 - 60, 10, 120, 40);
 
-        // süreyi dakika:saniye formatına çevir
         let m = Math.floor(this.timeRemaining / 60);
         let s = Math.floor(this.timeRemaining % 60);
         if (m < 10) m = "0" + m;
         if (s < 10) s = "0" + s;
         let timeStr = m + ":" + s;
 
-        // son 10 saniye kala kırmızı yap
         if (this.timeRemaining <= 10) {
             ctx.fillStyle = '#ff6b6b';
         } else {
@@ -76,7 +74,6 @@ class GameTimer {
 
     togglePause() {
         this.isPaused = !this.isPaused;
-        // devam edince zamanın birden fırlamasını engelle
         if (!this.isPaused) {
             this.lastTime = Date.now();
         }
