@@ -39,6 +39,9 @@ Bu oyun, **pixelbrain** tarafından geliştirilen orijinal **"Meltdown Barrage"*
 
 > **Ana Konsept**: "Düşman dalgalarından hayatta kal ve toprağını koru. Ama çok dikkatli olma, ne kadar çok hasar alırsan o kadar güçlü olursun."
 
+### 🎯 Oyunun Hedefi (Challenge)
+**Mümkün olduğunca uzun süre hayatta kalarak en yüksek skoru elde etmek.** Düşman dalgaları her geçen seviyede daha fazla sayıda ve daha hızlı düşmanla gelir. Oyuncu, hasar aldıkça güçlenen eşsiz "Meltdown" mekaniği sayesinde risk-ödül dengesini yönetmeli; çok fazla hasar almaktan kaçınırken bir yandan da düşmanları etkisiz hale getirip puan toplamalıdır. Zorluk, her yeni dalgada artan düşman yoğunluğu ve ateş hızıyla giderek yükselir.
+
 ---
 
 ## 🎮 Oyun Mekanikleri
@@ -49,8 +52,7 @@ Oyunun en önemli özelliği **hasar aldıkça güçlenme** mekaniğidir:
 |:------------:|:-------------:|:------------:|:--------------:|
 | Seviye 1 | 0-19 hasar | 5 hasar | 🟢 Yeşil |
 | Seviye 2 | 20-39 hasar | 8 hasar | 🔵 Mavi |
-| Seviye 3 | 40-59 hasar | 11 hasar | 🟠 Turuncu |
-| Seviye 4+ | 60+ hasar | 14+ hasar | 🔴 Kırmızı |
+| Seviye 3 | 40-49 hasar | 11 hasar | 🟠 Turuncu |
 
 > **Not**: Her 20 hasarda bir güç seviyesi atlanır ve mermi hasarı 3 artar.
 

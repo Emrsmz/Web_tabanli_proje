@@ -7,7 +7,7 @@ Bu doküman, "Meltdown Barrage" web tabanlı oyun projesinin geliştirilmesi sı
 ### 1. Cascade (Claude)
 - **Amaç**: Kod geliştirme, hata ayıklama, optimizasyon
 
-### 2. Web Arama (Dahili)
+### 2. Gemini 
 - **Amaç**: Oyun mekanikleri araştırması, referans kontrolü
 
 ### 3. Kod Analiz Araçları
