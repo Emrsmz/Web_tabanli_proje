@@ -1,4 +1,4 @@
-// Mermi
+// mermi sinifi
 class Bullet {
     constructor(x, y, angle, owner) {
         this.x = x;
@@ -9,7 +9,7 @@ class Bullet {
         this.owner = owner;
         this.active = true;
         
-        // Oyuncunun güç seviyesine göre hasar
+        // oyuncunun gucune gore hasar degisiyor
         if (owner instanceof PlayerTank) {
             this.damage = owner.bulletDamage;
         } else {
@@ -21,19 +21,20 @@ class Bullet {
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
         
-        // Sınırları kontrol et
+        // sinir kontrolu
         if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
             this.active = false;
         }
         
-        // Çarpışma kontrolü
+        // carpisma kontrolu
         if (this.owner instanceof PlayerTank) {
             enemies.forEach((enemy, index) => {
                 const dist = Math.hypot(enemy.x - this.x, enemy.y - this.y);
                 if (dist < enemy.radius + this.radius) {
                     if (enemy.takeDamage(this.damage)) {
                         enemies.splice(index, 1);
-                        score += 10; // Skor eklendi
+                        score += 10; 
+                        // skor artisi 
                         soundManager.playExplosion();
                     } else {
                         soundManager.playHit();
