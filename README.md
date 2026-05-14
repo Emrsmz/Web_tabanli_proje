@@ -27,7 +27,7 @@
 
 ### Duraklatma Ekranı
 ![Duraklatma](screenshot_game_over.png)
-*Oyun bittiğinde gösterilen final skor ekranı ve yeniden başlatma butonu*
+*Durdurunca çıkan ekran*
 
 </div>s
 
