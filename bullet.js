@@ -31,7 +31,7 @@ class Bullet {
             this.active = false;
         }
         
-        // carpisma kontrolu(oyuncu ile dusman mermisi arasinda)
+        // carpisma kontrolu(mermi ile dusman arasinda)
         if (this.owner instanceof PlayerTank) {
             enemies.forEach((enemy, index) => {
                 // mermi ile dusman arasi mesafe
