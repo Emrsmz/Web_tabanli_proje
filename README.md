@@ -25,11 +25,11 @@
 ![Dalga Geçişi](screenshot_wave_transition.png)
 *Her dalga arasında gösterilen geçiş ekranı - Skor ve yeni dalga bilgisi*
 
-### Game Over Ekranı
-![Game Over](screenshot_game_over.png)
+### Duraklatma Ekranı
+![Duraklatma](screenshot_game_over.png)
 *Oyun bittiğinde gösterilen final skor ekranı ve yeniden başlatma butonu*
 
-</div>
+</div>s
 
 ---
 
