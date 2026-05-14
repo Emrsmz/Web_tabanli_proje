@@ -1,49 +1,141 @@
-# Meltdown Barrage - Web Tabanlı Oyun
+# 💣 Meltdown Barrage - Web Tabanlı Oyun
 
-## Oyun Hakkında
+<div align="center">
 
-Bu oyun, "Meltdown Barrage" adlı orijinal oyunun temel mekaniklerinden esinlenerek geliştirilmiş bir web tabanlı survival shooter oyunudur. Oyunun ana konsepti şudur: "Düşman dalgalarından hayatta kal ve toprağını koru. Ama çok dikkatli olma, ne kadar çok hasar alırsan o kadar güçlü olursun."
+![HTML5](https://img.shields.io/badge/HTML5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black)
+![Canvas](https://img.shields.io/badge/Canvas-API-%23FF6B6B.svg?style=for-the-badge)
 
-## Oyun Mekanikleri
+**Web Tabanlı Programlama Dersi Projesi**
 
-### Temel Konsept
-- **Meltdown Sistemi**: Hasar aldıkça güçlenin! Her 20 hasarda bir güç seviyeniz artar
-- **Seviye Sistemi**: Zorluğu giderek artan düşman seviyelerini geçin
-- **Basit Düşmanlar**: Standart hareket ve saldırı desenlerine sahip düşmanlar
+</div>
 
-### Güç Seviyesi Sistemi
-Hasar aldıkça karakteriniz güçlenir:
-- **Seviye 1**: Temel yetenekler (5 hasar)
-- **Seviye 2+**: Artan mermi hasarı (her seviye +3 hasar)
-- **Renk Değişimi**: Güçlendikçe karakter rengi değişir
+---
 
-## Kontroller
+## 📸 Ekran Görüntüleri
+
+<div align="center">
+
+### Oynanış Anı
+![Oynanış](screenshot_gameplay.png)
+*Oyuncunun düşmanlara karşı mücadelesi - Güç seviyesi göstergesi ve can barı ile birlikte*
+
+### Dalga Geçiş Ekranı
+![Dalga Geçişi](screenshot_wave_transition.png)
+*Her dalga arasında gösterilen geçiş ekranı - Skor ve yeni dalga bilgisi*
+
+### Game Over Ekranı
+![Game Over](screenshot_game_over.png)
+*Oyun bittiğinde gösterilen final skor ekranı ve yeniden başlatma butonu*
+
+</div>
+
+---
+
+## 🎯 Oyun Hakkında
+
+Bu oyun, **pixelbrain** tarafından geliştirilen orijinal **"Meltdown Barrage"** oyununun temel mekaniklerinden esinlenerek geliştirilmiş bir **web tabanlı survival shooter** oyunudur.
+
+> **Ana Konsept**: "Düşman dalgalarından hayatta kal ve toprağını koru. Ama çok dikkatli olma, ne kadar çok hasar alırsan o kadar güçlü olursun."
+
+---
+
+## 🎮 Oyun Mekanikleri
+
+### ⚡ Meltdown Sistemi (Ana Mekanik)
+Oyunun en önemli özelliği **hasar aldıkça güçlenme** mekaniğidir:
+| Güç Seviyesi | Gereken Hasar | Mermi Hasarı | Karakter Rengi |
+|:------------:|:-------------:|:------------:|:--------------:|
+| Seviye 1 | 0-19 hasar | 5 hasar | 🟢 Yeşil |
+| Seviye 2 | 20-39 hasar | 8 hasar | 🔵 Mavi |
+| Seviye 3 | 40-59 hasar | 11 hasar | 🟠 Turuncu |
+| Seviye 4+ | 60+ hasar | 14+ hasar | 🔴 Kırmızı |
+
+> **Not**: Her 20 hasarda bir güç seviyesi atlanır ve mermi hasarı 3 artar.
+
+### 🌊 Dalga Sistemi
+- Düşmanlar dalgalar halinde gelir
+- Her dalgada düşman sayısı artar (maksimum 5)
+- Dalga geçişlerinde bonus skor kazanılır
+- Her yeni dalgada süreye +15 saniye eklenir
+
+### 🤖 Düşmanlar
+- Dairesel yörüngede hareket ederler
+- Oyuncuyu hedef alıp ateş ederler
+- Seviye arttıkça hızlanır ve daha sık ateş ederler
+- Her düşmanda hasar aldıkça görünen can barı bulunur
+
+---
+
+## 🕹️ Kontroller
 
 ### Klavye
-- **W/A/S/D**: Karakter hareketi (yukarı/sol/aşağı/sağ)
-- **Mouse**: Nişan alma yönü
+| Tuş | İşlev |
+|:---:|:------|
+| <kbd>W</kbd> | Yukarı hareket |
+| <kbd>A</kbd> | Sola hareket |
+| <kbd>S</kbd> | Aşağı hareket |
+| <kbd>D</kbd> | Sağa hareket |
+| <kbd>P</kbd> veya <kbd>ESC</kbd> | Oyunu duraklat/devam ettir |
 
 ### Fare
-- **Sol Tık (basılı tut)**: Sürekli ateş etme
-- **Mouse Hareketi**: Nişan alma
+| İşlem | İşlev |
+|:-----:|:------|
+| **Mouse Hareketi** | Nişan alma (karakter fare yönüne döner) |
+| **Sol Tık (basılı tut)** | Sürekli ateş etme |
+| **"BAŞLA" butonuna tıkla** | Yeni dalgayı başlatma |
+| **"YENİDEN BAŞLA" butonuna tıkla** | Oyunu yeniden başlatma |
 
-## Oyunun Hedefi ve Zorluğu
+### Diğer
+| İşlem | İşlev |
+|:-----:|:------|
+| 🔊 **Ses Butonu** (sağ üst) | Ses efektlerini açıp kapatma |
 
-### Hedef
-Oyuncunun amacı, gelen düşman dalgalarını yenerek mümkün olduğunca uzun süre hayatta kalmaktır.
+---
 
-### Zorluk
-- Her seviye daha fazla düşman içerir (maksimum 5)
-- Hasar almak güçlenmenizi sağlar ama aynı zamanda ölüm riskinizi artırır
-- Dengeyi bulmak: Ne kadar hasar alıp güçleneceğinizi iyi zamanlamanız gerekir
+## 📦 Kurulum
 
-## Teknik Özellikler
+Proje herhangi bir kurulum gerektirmez. Tek yapmanız gereken:
+
+1. **Projeyi klonlayın:**
+   ```bash
+   git clone https://github.com/Emrsmz/Web_tabanli_proje.git
+   ```
+2. **index.html dosyasını bir tarayıcıda açın:**
+   - Chrome, Firefox, Edge veya Safari'de `index.html` dosyasına çift tıklayın
+   - Veya dosyayı tarayıcıya sürükleyip bırakın
+
+> **Not**: Oyun herhangi bir web sunucusu gerektirmez, doğrudan dosya sistemi üzerinden çalışır.
+
+---
+
+## 🛠️ Teknik Özellikler
 
 ### Kullanılan Teknolojiler
-- **HTML5 Canvas**: Oyun grafikleri ve animasyonları
-- **JavaScript**: Oyun mantığı ve fizik
-- **CSS3**: UI stilleri ve efektler
-- **Web Audio API**: Prosedürel ses efektleri ve arka plan müziği
+| Teknoloji | Kullanım Amacı |
+|:----------|:---------------|
+| **HTML5 Canvas** | Oyun grafikleri, animasyonlar ve UI çizimleri |
+| **JavaScript (ES6+)** | Oyun mantığı, fizik hesaplamaları ve sınıf yapıları |
+| **CSS3** | Buton stilleri ve görsel düzenlemeler |
+| **Web Audio API** | Prosedürel ses efektleri ve arka plan müziği |
+
+### Proje Dosya Yapısı
+```
+Web_tabanli_proje/
+├── 📄 index.html            # Ana HTML dosyası (Canvas + Butonlar)
+├── 📄 style.css             # CSS stilleri
+├── 📄 main.js               # Oyun döngüsü, UI, dalga sistemi
+├── 📄 player.js             # Oyuncu tankı sınıfı (PlayerTank)
+├── 📄 enemy.js              # Düşman tankı sınıfı (EnemyTank)
+├── 📄 bullet.js             # Mermi sınıfı (Bullet)
+├── 📄 sound.js              # Ses yöneticisi (SoundManager)
+├── 📄 README.md             # Bu dosya
+├── 📄 AI.md                 # Yapay zeka kullanım dokümantasyonu
+├── 🖼️ screenshot_gameplay.png    # Oynanış ekran görüntüsü
+├── 🖼️ screenshot_wave_transition.png  # Dalga geçiş ekran görüntüsü
+└── 🖼️ screenshot_game_over.png      # Game over ekran görüntüsü
+```
 
 ### Tarayıcı Uyumluluğu
 - ✅ Google Chrome (tüm versiyonlar)
@@ -51,47 +143,73 @@ Oyuncunun amacı, gelen düşman dalgalarını yenerek mümkün olduğunca uzun 
 - ✅ Microsoft Edge (tüm versiyonlar)
 - ✅ Safari (modern versiyonlar)
 
-## Asset Kaynakları
+---
 
-Bu projede kullanılan tüm görsel ve ses assetleri kod içinde basit şekiller ve renklerle oluşturulmuştur. Harici görsel veya ses dosyaları kullanılmamıştır.
+## 💡 Asset Kaynakları
 
-### Görsel Efektler
-- Basit şekiller (daireler, dikdörtgenler)
-- Renk geçişleri
-- Can barları ve UI elementleri
+Bu projede **harici hiçbir görsel veya ses dosyası** kullanılmamıştır:
 
-### Ses Efektleri
-- Web Audio API ile programatik olarak oluşturulmuş temel sesler
-- Ateş etme, hasar alma, patlama efektleri
-- Basit arka plan müziği
+### Görseller
+- Tüm oyun grafikleri **HTML5 Canvas API** ile çizilmiştir
+- Karakterler basit şekiller (daire + dikdörtgen) kullanılarak oluşturulmuştur
+- UI elementleri (can barı, skor paneli, butonlar) programatik olarak çizilmiştir
 
-## Geliştirme Süreci
-
-### Proje Süresi
-- Toplam geliştirme süresi: ~8 saat
-- Temel mekanikler: 4 saat
-- Grafikler ve UI: 2 saat
-- Ses sistemi: 1 saat
-- Test ve düzeltmeler: 1 saat
-
-### Zorluklar ve Çözümler
-1. **Meltdown Mekaniği**: Hasar-güç dengesini ayarlamak
-2. **Düşman Hareketi**: Basit daire hareketi oluşturmak
-3. **Canvas Çizimi**: Temel şekillerle oyun oluşturmak
-4. **Ses Sistemi**: Web Audio API ile temel sesler
-
-## Lisans
-
-Bu proje eğitim amaçlı geliştirilmiştir. Kodlar açık kaynaklıdır ancak ticari kullanım için izin alınmalıdır.
+### Sesler
+- Tüm ses efektleri **Web Audio API** ile programatik olarak üretilmiştir
+- Oscillator (osilatör) ve noise (gürültü) tabanlı ses sentezi kullanılmıştır
+- Arka plan müziği, JavaScript ile oluşturulan döngüsel bir ritimdir
 
 ---
 
-## Orijinal Oyun
+## 🤖 Yapay Zeka Kullanımı
 
-**Oyun Adı**: Meltdown Barrage  
-**Geliştirici**: pixelbrain  
-**Platform**: itch.io  
-**Link**: https://pixelbrain.itch.io/meltdown-barrage  
-**Jam**: Wowie Jam 3.0  
+Bu proje geliştirilirken **Cascade (Claude 3.5 Sonnet)** yapay zeka aracından faydalanılmıştır.
 
-Bu proje, orijinal oyunun temel mekaniklerini HTML5 ve JavaScript ile basitleştirilmiş şekilde yeniden yorumlamaktad. Grafikler, sesler ve oyun detayları orijinalden farklılık göstermektedir.
+> **Detaylı prompt geçmişi ve alınan cevaplar için:** [📄 AI.md](./AI.md) dosyasını inceleyiniz.
+
+### Kullanım Alanları
+| Alan | Açıklama |
+|:-----|:---------|
+| **Kod Geliştirme** | Sınıf yapıları, oyun mantığı, fizik hesaplamaları |
+| **Hata Ayıklama** | Çarpışma kontrolleri, zamanlama sorunları |
+| **Ses Sistemi** | Web Audio API ile prosedürel ses üretimi |
+| **Dokümantasyon** | README ve AI.md dosyalarının hazırlanması |
+
+---
+
+## ⏱️ Geliştirme Süreci
+
+| Aşama | Süre |
+|:-----|:----:|
+| Analiz ve Planlama | ~1 saat |
+| Temel Mekanikler (Player, Enemy, Bullet) | ~3 saat |
+| Dalga Sistemi ve UI | ~2 saat |
+| Ses Sistemi | ~1 saat |
+| Test ve Düzeltmeler | ~1 saat |
+| **Toplam** | **~8 saat** |
+
+---
+
+## 🏆 Orijinal Oyun
+
+| Özellik | Detay |
+|:--------|:------|
+| **Oyun Adı** | Meltdown Barrage |
+| **Geliştirici** | pixelbrain |
+| **Platform** | itch.io |
+| **Jam** | Wowie Jam 3.0 |
+| **Orijinal Oyun Linki** | [https://pixelbrain.itch.io/meltdown-barrage](https://pixelbrain.itch.io/meltdown-barrage) |
+
+> Bu proje, orijinal oyunun temel mekaniklerini HTML5 ve JavaScript ile basitleştirilmiş şekilde yeniden yorumlamaktadır. Grafikler, sesler ve oyun detayları orijinalden farklılık göstermektedir.
+
+---
+
+## 📜 Lisans
+
+Bu proje **eğitim amaçlı** geliştirilmiştir. Kodlar açık kaynaklıdır ancak ticari kullanım için izin alınmalıdır.
+
+<div align="center">
+
+**Web Tabanlı Programlama Dersi - 2026**
+
+</div>

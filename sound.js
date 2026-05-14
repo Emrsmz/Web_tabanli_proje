@@ -1,18 +1,17 @@
-// Ses sistemi - Web Audio API ile prosedürel ses efektleri
+// Web Audio API kullanılarak oluşturulan ses efektleri
 class SoundManager {
     constructor() {
         this.audioCtx = null;
         this.initialized = false;
         this.masterVolume = 0.3;
         this.sfxVolume = 0.5;
-        this.musicVolume = 0.15;
+        this.musicVolume = 0.75;
         this.musicPlaying = false;
         this.musicOscillators = [];
         this.musicGain = null;
         this.muted = false;
     }
 
-    // Kullanıcı etkileşimi sonrası AudioContext başlat
     init() {
         if (this.initialized) return;
         try {
@@ -34,11 +33,8 @@ class SoundManager {
         }
         return this.muted;
     }
-
-    // --- SES EFEKTLERİ ---
-
-    // Oyuncu ateş sesi - kısa, keskin lazer benzeri
-    playShoot() {
+    
+    playShoot() { // Oyuncunun ateş sesi.
         if (!this.initialized || this.muted) return;
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
@@ -65,9 +61,8 @@ class SoundManager {
         osc.start(now);
         osc.stop(now + 0.12);
     }
-
-    // Düşman ateş sesi - biraz farklı tonda
-    playEnemyShoot() {
+    
+    playEnemyShoot() { // Düşman ateş etme sesi
         if (!this.initialized || this.muted) return;
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
@@ -89,13 +84,11 @@ class SoundManager {
         osc.stop(now + 0.1);
     }
 
-    // Mermi çarpma sesi - düşmana isabet
+    // Düşmana vurduğumuzda çıkan ses efekti
     playHit() {
         if (!this.initialized || this.muted) return;
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
-
-        // Gürültü benzeri darbe sesi
         const bufferSize = ctx.sampleRate * 0.08;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -122,13 +115,12 @@ class SoundManager {
         noise.start(now);
     }
 
-    // Oyuncu hasar alma sesi - kalın darbe
+    // Düşmanın bizi vurdğunda çıkan ses efekti
     playPlayerHit() {
         if (!this.initialized || this.muted) return;
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
 
-        // Düşük frekanslı darbe
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
 
@@ -145,7 +137,6 @@ class SoundManager {
         osc.start(now);
         osc.stop(now + 0.25);
 
-        // Gürültü katmanı
         const bufferSize = ctx.sampleRate * 0.15;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -166,13 +157,11 @@ class SoundManager {
         noise.start(now);
     }
 
-    // Düşman yok edilme sesi - patlama efekti
+    // Düşmanı patlatma
     playExplosion() {
         if (!this.initialized || this.muted) return;
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
-
-        // Patlama - gürültü
         const bufferSize = ctx.sampleRate * 0.5;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -198,7 +187,6 @@ class SoundManager {
 
         noise.start(now);
 
-        // Düşük frekanslı darbe
         const osc = ctx.createOscillator();
         const oscGain = ctx.createGain();
 
@@ -216,14 +204,13 @@ class SoundManager {
         osc.stop(now + 0.35);
     }
 
-    // Güçlenme sesi - yükselen enerji efekti
+    // Güçlenme sesi efekti
     playPowerUp() {
         if (!this.initialized || this.muted) return;
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
 
-        // Yükselen arpej
-        const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5
+        const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // Yapay zekaya yardımıyla oluşturulan notalar (Harfler notayı sayılar kaçıncı oktavda olduğunu gösterir.): C4, E4, G4, C5, E5
         const duration = 0.08;
 
         notes.forEach((freq, i) => {
@@ -271,13 +258,13 @@ class SoundManager {
         noise.start(now);
     }
 
-    // Seviye atlama sesi - yükselen melodili fanfar
+    // Seviye atlama ses efekti
     playLevelUp() {
         if (!this.initialized || this.muted) return;
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
 
-        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // Burada yazılan notalar: C5, E5, G5, C6
         const duration = 0.12;
 
         notes.forEach((freq, i) => {
@@ -300,7 +287,6 @@ class SoundManager {
             osc.stop(startTime + duration + 0.1);
         });
 
-        // Son nota uzun kalsın
         const osc2 = ctx.createOscillator();
         const gain2 = ctx.createGain();
         osc2.type = 'triangle';
@@ -315,13 +301,13 @@ class SoundManager {
         osc2.stop(finalStart + 0.5);
     }
 
-    // Oyun sonu sesi - kederli azalan melodileri
+    // Meşhur Game Over ses efekti
     playGameOver() {
         if (!this.initialized || this.muted) return;
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
 
-        const notes = [440, 392, 349.23, 261.63]; // A4, G4, F4, C4
+        const notes = [440, 392, 349.23, 261.63]; // Notalar: A4, G4, F4, C4
         const duration = 0.3;
 
         notes.forEach((freq, i) => {
@@ -344,7 +330,6 @@ class SoundManager {
             osc.stop(startTime + duration + 0.05);
         });
 
-        // Düşük patlama sesi
         const bufferSize = ctx.sampleRate * 0.8;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -370,9 +355,7 @@ class SoundManager {
         noise.start(now);
     }
 
-    // --- ARKA PLAN MÜZİĞİ ---
-    // Basit prosedürel ambient/savaş müziği
-
+    // Arka planda çalacak savaş müziği
     startMusic() {
         if (!this.initialized || this.musicPlaying) return;
         this.musicPlaying = true;
@@ -392,8 +375,8 @@ class SoundManager {
         const ctx = this.audioCtx;
         const now = ctx.currentTime;
 
-        // Bass pattern - savaş davul ritmi
-        const bassNotes = [65.41, 65.41, 82.41, 65.41, 73.42, 65.41, 82.41, 98]; // C2 tabanlı bass
+        // Savaş Davul ritmi
+        const bassNotes = [65.41, 65.41, 82.41, 65.41, 73.42, 65.41, 82.41, 98]; // ikinci oktav DO notası (C2) 
         const beatDuration = 0.25;
         const barLength = bassNotes.length * beatDuration;
 
@@ -418,7 +401,6 @@ class SoundManager {
             this.musicOscillators.push(osc);
         });
 
-        // Ritm davul - kick benzeri
         for (let i = 0; i < bassNotes.length; i += 2) {
             const bufferSize = ctx.sampleRate * 0.1;
             const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -439,7 +421,6 @@ class SoundManager {
             noise.start(now + i * beatDuration);
         }
 
-        // Hi-hat benzeri
         for (let i = 0; i < bassNotes.length; i++) {
             if (i % 2 === 1) {
                 const bufferSize = ctx.sampleRate * 0.03;
@@ -467,7 +448,7 @@ class SoundManager {
             }
         }
 
-        // Sonraki döngüyü planla
+        // Döngüleştirme
         this._musicTimeout = setTimeout(() => {
             this._playMusicLoop();
         }, barLength * 1000);
@@ -491,5 +472,4 @@ class SoundManager {
     }
 }
 
-// Global ses yöneticisi
 const soundManager = new SoundManager();

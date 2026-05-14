@@ -1,64 +1,52 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-
 // Oyun durumu
 let gameRunning = true;
 let level = 1;
 let score = 0; // Skor sistemi
 let mouseX = canvas.width / 2;
 let mouseY = canvas.height / 2;
-
 // UI sistemi
 let gameOverVisible = false;
 let finalScore = 0;
 let animationTimer = 0;
-
 // Dalga geçiş sistemi
 let waveTransition = false;
 let pendingWaveLevel = 1;
-let waveStopped = false;
-
-// Oyun duraklatma sistemi (timer.js yoksa bile çalışsın)
+// oyun durdurma sistemi 
 let gamePaused = false;
-
-// Tuş durumu
+// tus durumu
 const keys = {};
-
 // Oyun nesneleri
 let player;
 let enemies = [];
-let gameTimer = null; // Sayaç nesnesi
+let gameTimer = null; 
 
-// Oyunu başlat
+// baslatma fonksiyonu
 function init() {
-    // PlayerTank sınıfının varlığını kontrol ederek güvenli başlatma
+    // karkateri kontrol ediyo
     if (typeof PlayerTank !== 'undefined') {
         player = new PlayerTank(canvas.width / 2, canvas.height / 2);
     }
-    
     enemies = [];
-    score = 0;
-    
-    // GÜVENLİK KONTROLÜ: GameTimer sınıfı o anki HTML'de ekli değilse oyunu çökertmez
+    score = 0;  
+    // game timer kontrolü
     if (typeof GameTimer !== 'undefined') {
         gameTimer = new GameTimer(60);
     } else {
         gameTimer = null;
     }
-
     gameRunning = true;
     level = 1;
     gameOverVisible = false;
-    animationTimer = 0;
-    
+    animationTimer = 0; 
     spawnEnemies();
     updateUI();
 }
 
-// Düşmanları spawnla
+// Düşman spawn
 function spawnEnemies() {
-    const enemyCount = Math.min(level, 5);
-    
+    const enemyCount = Math.min(level, 5);    
     for (let i = 0; i < enemyCount; i++) {
         let x, y;
         do {
@@ -67,7 +55,6 @@ function spawnEnemies() {
         } while (player && Math.hypot(x - player.x, y - player.y) < 200);
         
         if (typeof EnemyTank !== 'undefined') {
-            // Faz ofseti parametresi (tanımlıysa kullanır, ana kodda bu parametre yoksa EnemyTank bunu görmezden gelir)
             const phaseOffset = (i / enemyCount) * (2 * Math.PI / 0.005) * (1 / (0.7 + (level - 1) * 0.1));
             enemies.push(new EnemyTank(x, y, level, phaseOffset));
         }
@@ -76,12 +63,9 @@ function spawnEnemies() {
 
 // Oyun döngüsü
 function gameLoop() {
-    if (!gameRunning) return;
-    
-    // Canvas'ı temizle
+    if (!gameRunning) return;   
     ctx.fillStyle = '#f0f0f0';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+    ctx.fillRect(0, 0, canvas.width, canvas.height);   
     // Grid deseni
     ctx.strokeStyle = '#ddd';
     ctx.lineWidth = 1;
@@ -96,168 +80,129 @@ function gameLoop() {
         ctx.moveTo(0, i);
         ctx.lineTo(canvas.width, i);
         ctx.stroke();
-    }
-    
-    // Sayacı güncelle (yüklü, aktifse ve dalga geçişinde değilse)
+    }   
+    // sayaci güncelle ve dalga geçişi kontrolü
     if (gameTimer && !waveTransition) {
         gameTimer.update();
-    }
-    
-    // Oyun duraklatılmadıysa ve dalga geçişi yoksa objeleri hareket ettir
+    }  
+    // oyun duraklama kontrolü
     if (!waveTransition && !gamePaused) {
         if (player) {
             player.update();
-        }
-        
+        }        
         enemies.forEach(enemy => {
             enemy.update();
-        });
-        
-        // Seviye geçiş kontrolü - tüm düşmanlar öldüğünde dalga geçiş ekranı göster
+        });     
+        // seviye geçiş kontrolü
         if (enemies.length === 0 && player && !waveTransition) {
             waveTransition = true;
-            waveStopped = false;
             pendingWaveLevel = level + 1;
         }
-    }
-    
+    }   
     // Animasyon zamanlayıcısı her zaman çalışır (dalga geçişi ve duraklatmada bile UI animasyonları için)
-    animationTimer++;
-    
+    animationTimer++;   
     // Çizimler
     if (player) {
         player.draw();
-    }
-    
+    } 
     enemies.forEach(enemy => {
         enemy.draw();
     });
-    
     drawUI();
-    
     if (gameTimer) {
         gameTimer.draw();
     }
-    
     requestAnimationFrame(gameLoop);
 }
-
-// UI Çizimleri
+// UI çizimleri
 function drawUI() {
     drawUIOverlay();
-    
     if (gameOverVisible) {
         drawGameOver();
     }
-    
     if (waveTransition) {
         drawWaveTransition();
     }
-    
     // Duraklatma göstergesi
     if (gamePaused) {
         drawPauseOverlay();
     }
 }
-
 function drawUIOverlay() {
-    ctx.save();
-    
+    ctx.save();   
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(10, 10, 200, 100);
-    
     ctx.strokeStyle = '#4CAF50';
     ctx.lineWidth = 2;
-    ctx.strokeRect(10, 10, 200, 100);
-    
+    ctx.strokeRect(10, 10, 200, 100);  
     ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 18px Arial';
     ctx.textAlign = 'left';
-    
     ctx.fillText(`Seviye: ${level}`, 20, 35);
     ctx.fillText(`Skor: ${score}`, 20, 60);
     ctx.fillText('Can:', 20, 85);
-    
     ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
     ctx.fillRect(70, 72, 120, 20);
-    
     const health = player ? player.health : 0;
     const healthPercent = Math.max(0, health) / 50;
     const healthColor = healthPercent > 0.5 ? '#4CAF50' : 
                       healthPercent > 0.25 ? '#FFA500' : '#FF6B6B';
-    
     ctx.fillStyle = healthColor;
     ctx.fillRect(70, 72, 120 * healthPercent, 20);
-    
     ctx.strokeStyle = '#FFFFFF';
     ctx.lineWidth = 1;
     ctx.strokeRect(70, 72, 120, 20);
-    
     ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 14px Arial';
     ctx.textAlign = 'center';
     ctx.fillText(`${Math.max(0, health)}/50`, 130, 86);
-    
     ctx.restore();
 }
 
 function drawGameOver() {
     ctx.save();
-    
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
     const panelWidth = 400;
     const panelHeight = 280;
     const panelX = (canvas.width - panelWidth) / 2;
     const panelY = (canvas.height - panelHeight) / 2;
-    
     ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
     ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
-    
     ctx.strokeStyle = '#FF6B6B';
     ctx.lineWidth = 3;
     ctx.strokeRect(panelX, panelY, panelWidth, panelHeight);
-    
     ctx.fillStyle = '#FF6B6B';
     ctx.font = 'bold 36px Arial';
     ctx.textAlign = 'center';
     ctx.fillText('OYUN BİTTİ!', canvas.width / 2, panelY + 50);
-    
     ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 24px Arial';
     ctx.fillText(`Final Skor: ${score}`, canvas.width / 2, panelY + 100);
-    
     const buttonWidth = 200;
     const buttonHeight = 50;
     const buttonX = (canvas.width - buttonWidth) / 2;
     const buttonY = panelY + 180;
-    
     const pulse = Math.sin(animationTimer * 0.05) * 0.1 + 0.9;
     ctx.fillStyle = `rgba(76, 175, 80, ${pulse})`;
     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-    
     ctx.strokeStyle = '#4CAF50';
     ctx.lineWidth = 2;
     ctx.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
-    
     ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 20px Arial';
     ctx.fillText('YENİDEN BAŞLA', canvas.width / 2, buttonY + 32);
-    
     ctx.restore();
 }
 
 function isGameOverButtonClicked(mouseX, mouseY) {
     if (!gameOverVisible) return false;
-    
     const panelHeight = 280;
     const panelY = (canvas.height - panelHeight) / 2;
     const buttonWidth = 200;
     const buttonHeight = 50;
     const buttonX = (canvas.width - buttonWidth) / 2;
     const buttonY = panelY + 180;
-    
     return mouseX >= buttonX && mouseX <= buttonX + buttonWidth &&
            mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
 }
@@ -266,7 +211,7 @@ function updateUI() {
     animationTimer++;
 }
 
-// Duraklatma ekranı çizimi
+// durdurma ekranı cizimi
 function drawPauseOverlay() {
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -284,14 +229,11 @@ function drawPauseOverlay() {
     ctx.restore();
 }
 
-// Dalga geçiş ekranı çizimi
+// dalga gecis ekranı çizimi
 function drawWaveTransition() {
     ctx.save();
-    
-    // Yarı saydam karartma
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+    ctx.fillRect(0, 0, canvas.width, canvas.height);  
     const panelWidth = 450;
     const panelHeight = 300;
     const panelX = (canvas.width - panelWidth) / 2;
@@ -302,7 +244,7 @@ function drawWaveTransition() {
     ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
     
     // Panel çerçevesi
-    const borderColor = waveStopped ? '#FF6B6B' : '#4CAF50';
+    const borderColor = '#4CAF50';
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = 3;
     ctx.strokeRect(panelX, panelY, panelWidth, panelHeight);
@@ -320,47 +262,35 @@ function drawWaveTransition() {
     ctx.fillText(`Skor: ${score}`, canvas.width / 2, panelY + 130);
     
     // Durum mesajı
-    ctx.fillStyle = waveStopped ? '#FF6B6B' : '#FFA500';
+    ctx.fillStyle = '#FFA500';
     ctx.font = 'bold 16px Arial';
-    ctx.fillText(waveStopped ? 'DALGA DURDURULDU' : 'Yeni dalgaya hazır mısın?', canvas.width / 2, panelY + 170);
+    ctx.fillText('Yeni dalgaya hazır mısın?', canvas.width / 2, panelY + 170);
     
-    // BAŞLA butonu
+    // Başlama butonu
     const buttonWidth = 220;
     const buttonHeight = 55;
     const buttonX = (canvas.width - buttonWidth) / 2;
     const buttonY = panelY + 195;
-    
     const pulse = Math.sin(animationTimer * 0.05) * 0.1 + 0.9;
-    
-    if (waveStopped) {
-        // Durdurulmuş dalga - kırmızımsı buton
-        ctx.fillStyle = `rgba(255, 107, 107, ${pulse * 0.8})`;
-        ctx.strokeStyle = '#FF6B6B';
-    } else {
+
         ctx.fillStyle = `rgba(76, 175, 80, ${pulse})`;
-        ctx.strokeStyle = '#4CAF50';
-    }
-    
+        ctx.strokeStyle = '#4CAF50'; 
+
     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
     ctx.lineWidth = 2;
     ctx.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
-    
     ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 22px Arial';
     ctx.fillText('BAŞLA', canvas.width / 2, buttonY + 35);
-    
-    // Kısayol bilgisi
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.font = '14px Arial';
     ctx.fillText('BAŞLA butonuna tıkla', canvas.width / 2, panelY + panelHeight - 15);
-    
     ctx.restore();
 }
 
 // Dalga başlatma
 function startWave() {
     waveTransition = false;
-    waveStopped = false;
     level = pendingWaveLevel;
     score += 100 * level;
     spawnEnemies();
@@ -369,13 +299,13 @@ function startWave() {
     if (gameTimer) {
         gameTimer.timeRemaining += 15;
     }
-    
+
     if (typeof soundManager !== 'undefined' && soundManager) {
         soundManager.playLevelUp();
     }
 }
 
-// BAŞLA butonuna tıklama kontrolü
+// Baslama butonuna tıklandı mı kontrol
 function isWaveStartButtonClicked(mouseX, mouseY) {
     if (!waveTransition) return false;
     
@@ -418,12 +348,12 @@ function initAudio() {
     }
 }
 
-// Event listeners
+
 document.addEventListener('keydown', (e) => {
     initAudio();
     keys[e.key] = true;
     
-    // ESC/P ile oyunu duraklatma/ devam ettirme (dalga geçiş ekranında değil ve oyun çalışıyorken)
+    // Oyunu durdurma p veya esc ile
     if ((e.key === 'p' || e.key === 'P' || e.key === 'Escape') && gameRunning && !waveTransition) {
         gamePaused = !gamePaused;
     }
@@ -450,7 +380,7 @@ canvas.addEventListener('mousedown', (e) => {
         return;
     }
     
-    // Dalga geçiş ekranında BAŞLA butonuna tıklandı
+    // Başla butonuna tıklandıysa dalga başlat
     if (waveTransition && isWaveStartButtonClicked(mouseX, mouseY)) {
         startWave();
         return;

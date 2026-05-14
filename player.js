@@ -1,147 +1,104 @@
-// Oyuncu karakteri
 class PlayerTank {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.radius = 25;
-        this.angle = 0;
-        this.speed = 2;
-        this.health = 50;
-        this.maxHealth = 50;
-        this.bullets = [];
-        this.lastShot = 0;
-        this.shootCooldown = 500;
-        this.color = '#4CAF50';
-        this.isShooting = false;
-        
-        // Meltdown mekanikleri - hasar aldıkça güçlenme
-        this.totalDamageTaken = 0;
-        this.powerLevel = 1;
-        this.bulletDamage = 5;
+    constructor(x,y){
+        this.x=x;
+        this.y=y;
+        this.radius=25;
+        this.angle=0;
+        this.speed=2;
+        this.health=50;
+        this.maxHealth=50;
+        this.bullets=[];
+        this.lastShot=0;
+        this.shootCooldown=500;
+        this.color='#4CAF50';
+        this.isShooting=false;
+        this.totalDamageTaken=0; //hasar aldikca guclenme mekanigi
+        this.powerLevel=1;
+        this.bulletDamage=5;
     }
     
     update() {
-        // Hareket
         if (keys['w'] || keys['W']) {
-            this.y -= this.speed;
+            this.y-=this.speed;
         }
         if (keys['s'] || keys['S']) {
-            this.y += this.speed;
+            this.y+=this.speed;
         }
         if (keys['a'] || keys['A']) {
-            this.x -= this.speed;
+            this.x-=this.speed;
         }
         if (keys['d'] || keys['D']) {
-            this.x += this.speed;
-        }
-        
-        // Sınırları kontrol et
-        this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));
-        this.y = Math.max(this.radius, Math.min(canvas.height - this.radius, this.y));
-        
-        // Mouse'a dön
-        this.angle = Math.atan2(mouseY - this.y, mouseX - this.x);
-        
-        // Sürekli ateş etme
-        if (this.isShooting) {
+            this.x+=this.speed;
+        } //hareket etme tuslari
+        this.x=Math.max(this.radius,Math.min(canvas.width-this.radius,this.x));
+        this.y=Math.max(this.radius,Math.min(canvas.height-this.radius,this.y));
+        this.angle=Math.atan2(mouseY-this.y,mouseX-this.x); //mousea donme hareketi
+        if (this.isShooting){ //surekli ates etme
             this.shoot();
         }
-        
-        // Mermileri güncelle
-        this.bullets = this.bullets.filter(bullet => {
+        this.bullets=this.bullets.filter(bullet=>{ //mermi guncelleme
             bullet.update();
             return bullet.active;
         });
     }
-    
     shoot() {
         const now = Date.now();
-        if (now - this.lastShot > this.shootCooldown) {
+        if (now-this.lastShot>this.shootCooldown) {
             const bullet = new Bullet(
-                this.x + Math.cos(this.angle) * this.radius,
-                this.y + Math.sin(this.angle) * this.radius,
+                this.x+Math.cos(this.angle)*this.radius,
+                this.y+Math.sin(this.angle)*this.radius,
                 this.angle,
                 this
             );
             this.bullets.push(bullet);
-            this.lastShot = now;
+            this.lastShot=now;
             soundManager.playShoot();
         }
     }
-    
     draw() {
-        // Tank gövdesi
         ctx.save();
-        ctx.translate(this.x, this.y);
-        
-        // Gövde
-        ctx.fillStyle = this.color;
+        ctx.translate(this.x,this.y);
+        ctx.fillStyle=this.color;
         ctx.beginPath();
-        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.arc(0,0,this.radius,0,Math.PI*2);
         ctx.fill();
-        
-        // Namlu
-        ctx.rotate(this.angle);
-        ctx.fillStyle = '#333';
-        ctx.fillRect(this.radius - 5, -8, 30, 16);
-        
+        ctx.rotate(this.angle); //tetik
+        ctx.fillStyle='#333';
+        ctx.fillRect(this.radius-5,-8,30,16);
         ctx.restore();
-        
-        // Can barı
-        if (this.health < this.maxHealth) {
-            ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
-            ctx.fillRect(this.x - 30, this.y - this.radius - 15, 60, 8);
-            
-            ctx.fillStyle = '#ff6b6b';
-            ctx.fillRect(this.x - 30, this.y - this.radius - 15, 60 * (this.health / this.maxHealth), 8);
+        if (this.health<this.maxHealth) { //hp bar
+            ctx.fillStyle='rgba(255,0,0,0.3)';
+            ctx.fillRect(this.x-30,this.y-this.radius-15,60,8);
+            ctx.fillStyle='#ff6b6b';
+            ctx.fillRect(this.x-30,this.y-this.radius-15,60*(this.health/this.maxHealth),8);
         }
-        
-        // Güç seviyesi göstergesi
-        if (this.powerLevel > 1) {
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 12px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(`Lv.${this.powerLevel}`, this.x, this.y + this.radius + 25);
+        if (this.powerLevel>1) { //guc seviyesi display mekanigi
+            ctx.fillStyle='#ffffff';
+            ctx.font='bold 12px Arial';
+            ctx.textAlign='center';
+            ctx.fillText(`Lv.${this.powerLevel}`,this.x,this.y+this.radius+25);
         }
-        
-        // Mermileri çiz
-        this.bullets.forEach(bullet => bullet.draw());
+        this.bullets.forEach(bullet=>bullet.draw()); //mermiler
     }
-    
     takeDamage(damage) {
-        this.health -= damage;
-        this.totalDamageTaken += damage;
-        
-        // Meltdown mekanikleri - hasar aldıkça güçlen
-        this.updatePowerLevel();
-        
+        this.health-=damage;
+        this.totalDamageTaken+=damage;
+        this.updatePowerLevel(); //hasar aldikca guclenme mekanigi
         soundManager.playPlayerHit();
-        if (this.health <= 0) {
-            this.health = 0;
+        if (this.health<=0) {
+            this.health=0;
             gameOver();
         }
         updateUI();
     }
-    
-    // Güç seviyesini hasara göre güncelle
-    updatePowerLevel() {
-        const oldLevel = this.powerLevel;
-        
-        // Her 20 hasarda bir güç seviyesi artar
-        this.powerLevel = Math.floor(this.totalDamageTaken / 20) + 1;
-        
-        if (this.powerLevel > oldLevel) {
-            // Güçlendikçe hasar artar
-            this.bulletDamage = 5 + (this.powerLevel - 1) * 3;
-            
-            // Renk değişimi
-            const colors = ['#4CAF50', '#2196F3', '#FF9800', '#F44336'];
-            this.color = colors[Math.min(this.powerLevel - 1, colors.length - 1)];
-            
-            // Güçlenme sesi
-            soundManager.playPowerUp();
-            
-            // Debug mesajı
+    updatePowerLevel() { //guc seviyesi guncelleme (hasara gore)
+        const oldLevel=this.powerLevel;
+        this.powerLevel=Math.floor(this.totalDamageTaken / 20) + 1; //20 hasar = 1 guc seviyesi
+        if (this.powerLevel>oldLevel) {
+            this.bulletDamage=5+(this.powerLevel-1)*3;
+            const colors=['#4CAF50','#2196F3','#FF9800','#F44336']; //guclendikce renk degismesi
+            this.color=colors[Math.min(this.powerLevel-1,colors.length-1)];
+            soundManager.playPowerUp(); //guclenme ses efekti
             console.log(`Güç seviyesi ${this.powerLevel} oldu! Hasar: ${this.bulletDamage}`);
         }
     }
