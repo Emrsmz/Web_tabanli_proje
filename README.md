@@ -9,9 +9,10 @@
 
 **Web Tabanlı Programlama Dersi Projesi**
 
+> 🕹️ **Oyunu Oyna:** [https://arda-dd.github.io/web_proje/](https://arda-dd.github.io/web_proje/)
+
 </div>
 
----
 
 ## 📸 Ekran Görüntüleri
 
@@ -29,7 +30,7 @@
 ![Duraklatma](screenshot_game_over.png)
 *Durdurunca çıkan ekran*
 
-</div>s
+</div>
 
 ---
 
